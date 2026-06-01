@@ -1,0 +1,11 @@
+{
+  "name": "@starwars/ui",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@mantine/core": "^8.2.7",
+    "@mantine/hooks": "^8.2.7",
+    "@starwars/domain": "workspace:*"
+  }
+}

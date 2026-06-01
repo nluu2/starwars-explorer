@@ -1,0 +1,11 @@
+{
+  "name": "@starwars/store",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "mobx": "^6.13.7",
+    "@starwars/api": "workspace:*",
+    "@starwars/domain": "workspace:*"
+  }
+}
