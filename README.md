@@ -11,9 +11,9 @@
 
 ## Packages
 
-- web
-- ui
-- api
-- store
-- domain
-- utils
+- apps/web: pages, routing, composition
+- ui: Mantine component extensions, CSS Modules, Sotrybook
+- api: axios client, service functions
+- store: MobX stores, cache logic
+- domain: TypeScript types / interfaces for all SWAPI entities
+- utils: shared helpers
