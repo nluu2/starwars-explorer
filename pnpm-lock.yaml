@@ -299,6 +299,10 @@ importers:
       axios:
         specifier: ^1.16.1
         version: 1.16.1
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.3
 
   packages/domain:
     devDependencies:
@@ -315,8 +319,21 @@ importers:
         specifier: workspace:*
         version: link:../domain
       mobx:
-        specifier: ^6.13.7
+        specifier: ^6.15.4
         version: 6.15.4
+      mobx-react-lite:
+        specifier: ^4.1.1
+        version: 4.1.1(mobx@6.15.4)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react:
+        specifier: ^19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.15
+        version: 19.2.15
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.15)
 
   packages/ui:
     dependencies:
