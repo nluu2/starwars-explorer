@@ -21,6 +21,12 @@ const VehiclesPage = observer(() => {
     vehicles.fetchAll(1)
   }, [])
 
+  useEffect(() => {
+    if (!vehicles.isLoading && vehicles.list.length > 0) {
+      vehicles.prefetchNextPage()
+    }
+  }, [vehicles.isLoading, vehicles.page])
+
   const handleSearchChange = useCallback(
     (value: string) => {
       ui.setSearch(value)

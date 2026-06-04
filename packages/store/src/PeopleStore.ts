@@ -12,6 +12,7 @@ export class PeopleStore {
   isLoading: boolean = false
   isLoadingDetail: boolean = false
   isLoadingRelations: boolean = false
+  isRefreshing: boolean = false
   error: string | null = null
 
   selectedFilms: Film[] = []
@@ -37,6 +38,7 @@ export class PeopleStore {
 
   fetchAll = async (page = 1): Promise<void> => {
     const cacheKey = `people:list:${page}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
     const cached = this.root.cache.get<SwapiList<Person>>(cacheKey)
 
     if (cached) {
@@ -45,6 +47,7 @@ export class PeopleStore {
         this.total = cached.count
         this.page = page
       })
+      if (status === 'stale') this.backgroundRefresh(page)
       return
     }
 
@@ -140,6 +143,49 @@ export class PeopleStore {
       runInAction(() => {
         this.isLoadingRelations = false
       })
+    }
+  }
+
+  // Silently refetch in the background without affecting isLoading
+  private backgroundRefresh = async (page: number): Promise<void> => {
+    if (this.isRefreshing) return
+
+    runInAction(() => {
+      this.isRefreshing = true
+    })
+
+    try {
+      const data = await this.service.getAll(page, this.root.ui.searchQuery)
+      const cacheKey = `people:list:${page}:${this.root.ui.searchQuery}`
+      this.root.cache.set(cacheKey, data, CacheStore.TTL.people)
+      runInAction(() => {
+        this.list = data.results
+        this.total = data.count
+      })
+    } catch {
+      console.log('An error occurred with the background refresh.')
+    } finally {
+      runInAction(() => {
+        this.isRefreshing = false
+      })
+    }
+  }
+
+  // Prefetch next page in background
+  prefetchNextPage = (): void => {
+    const nextPage = this.page + 1
+    if (nextPage > this.totalPages) return
+
+    const cacheKey = `people:list:${nextPage}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
+
+    if (status === 'missing') {
+      this.service
+        .getAll(nextPage, this.root.ui.searchQuery)
+        .then((data) => {
+          this.root.cache.set(cacheKey, data, CacheStore.TTL.people)
+        })
+        .catch(() => {})
     }
   }
 

@@ -21,6 +21,12 @@ const StarshipsPage = observer(() => {
     starships.fetchAll(1)
   }, [])
 
+  useEffect(() => {
+    if (!starships.isLoading && starships.list.length > 0) {
+      starships.prefetchNextPage()
+    }
+  }, [starships.isLoading, starships.page])
+
   const handleSearchChange = useCallback(
     (value: string) => {
       ui.setSearch(value)

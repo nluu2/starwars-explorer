@@ -12,6 +12,7 @@ export class PlanetsStore {
   isLoading: boolean = false
   isLoadingDetail: boolean = false
   isLoadingRelations: boolean = false
+  isRefreshing: boolean = false
   error: string | null = null
 
   selectedResidents: Person[] = []
@@ -33,6 +34,7 @@ export class PlanetsStore {
 
   fetchAll = async (page = 1): Promise<void> => {
     const cacheKey = `planets:list:${page}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
     const cached = this.root.cache.get<SwapiList<Planet>>(cacheKey)
 
     if (cached) {
@@ -41,6 +43,7 @@ export class PlanetsStore {
         this.total = cached.count
         this.page = page
       })
+      if (status === 'stale') this.backgroundRefresh(page)
       return
     }
 
@@ -121,6 +124,49 @@ export class PlanetsStore {
       runInAction(() => {
         this.isLoadingRelations = false
       })
+    }
+  }
+
+  // Silently refetch in the background without affecting isLoading
+  private backgroundRefresh = async (page: number): Promise<void> => {
+    if (this.isRefreshing) return
+
+    runInAction(() => {
+      this.isRefreshing = true
+    })
+
+    try {
+      const data = await this.service.getAll(page, this.root.ui.searchQuery)
+      const cacheKey = `planets:list:${page}:${this.root.ui.searchQuery}`
+      this.root.cache.set(cacheKey, data, CacheStore.TTL.planets)
+      runInAction(() => {
+        this.list = data.results
+        this.total = data.count
+      })
+    } catch {
+      console.log('An error occurred with the background refresh.')
+    } finally {
+      runInAction(() => {
+        this.isRefreshing = false
+      })
+    }
+  }
+
+  // Prefetch next page in background
+  prefetchNextPage = (): void => {
+    const nextPage = this.page + 1
+    if (nextPage > this.totalPages) return
+
+    const cacheKey = `planets:list:${nextPage}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
+
+    if (status === 'missing') {
+      this.service
+        .getAll(nextPage, this.root.ui.searchQuery)
+        .then((data) => {
+          this.root.cache.set(cacheKey, data, CacheStore.TTL.planets)
+        })
+        .catch(() => {})
     }
   }
 

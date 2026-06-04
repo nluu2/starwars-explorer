@@ -21,6 +21,12 @@ const PeoplePage = observer(() => {
     people.fetchAll(1)
   }, [])
 
+  useEffect(() => {
+    if (!people.isLoading && people.list.length > 0) {
+      people.prefetchNextPage()
+    }
+  }, [people.isLoading, people.page])
+
   const handleSearchChange = useCallback(
     (value: string) => {
       ui.setSearch(value)

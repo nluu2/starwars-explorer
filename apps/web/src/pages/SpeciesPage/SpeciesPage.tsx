@@ -21,6 +21,12 @@ const SpeciesPage = observer(() => {
     speciesStore.fetchAll(1)
   }, [])
 
+  useEffect(() => {
+    if (!speciesStore.isLoading && speciesStore.list.length > 0) {
+      speciesStore.prefetchNextPage()
+    }
+  }, [speciesStore.isLoading, speciesStore.page])
+
   const handleSearchChange = useCallback(
     (value: string) => {
       ui.setSearch(value)

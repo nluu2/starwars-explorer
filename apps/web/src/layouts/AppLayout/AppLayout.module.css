@@ -13,6 +13,13 @@
   font-weight: 400;
 }
 
+.cacheIndicator {
+  position: absolute;
+  right: var(--mantine-spacing-xl);
+  top: 25%;
+  transform: translateY(-50%);
+}
+
 .tabs {
   margin-top: var(--mantine-spacing-xs);
 }

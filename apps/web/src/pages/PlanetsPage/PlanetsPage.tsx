@@ -21,6 +21,12 @@ const PlanetsPage = observer(() => {
     planets.fetchAll(1)
   }, [])
 
+  useEffect(() => {
+    if (!planets.isLoading && planets.list.length > 0) {
+      planets.prefetchNextPage()
+    }
+  }, [planets.isLoading, planets.page])
+
   const handleSearchChange = useCallback(
     (value: string) => {
       ui.setSearch(value)

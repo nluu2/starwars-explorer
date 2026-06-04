@@ -11,6 +11,7 @@ export class VehiclesStore {
   total: number = 0
   isLoading: boolean = false
   isLoadingDetail: boolean = false
+  isRefreshing: boolean = false
   error: string | null = null
 
   constructor(
@@ -30,6 +31,7 @@ export class VehiclesStore {
 
   fetchAll = async (page = 1): Promise<void> => {
     const cacheKey = `vehicles:list:${page}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
     const cached = this.root.cache.get<SwapiList<Vehicle>>(cacheKey)
 
     if (cached) {
@@ -38,6 +40,7 @@ export class VehiclesStore {
         this.total = cached.count
         this.page = page
       })
+      if (status === 'stale') this.backgroundRefresh(page)
       return
     }
 
@@ -90,14 +93,57 @@ export class VehiclesStore {
       })
       this.root.ui.openDrawer(id)
     } catch (e) {
-      this.error = e instanceof Error ? e.message : 'Failed to load vehicle details'
       runInAction(() => {
+        this.error = e instanceof Error ? e.message : 'Failed to load vehicle details'
         this.root.ui.addNotification({ type: 'error', message: this.error! })
       })
     } finally {
       runInAction(() => {
         this.isLoadingDetail = false
       })
+    }
+  }
+
+  // Silently refetch in the background without affecting isLoading
+  private backgroundRefresh = async (page: number): Promise<void> => {
+    if (this.isRefreshing) return
+
+    runInAction(() => {
+      this.isRefreshing = true
+    })
+
+    try {
+      const data = await this.service.getAll(page, this.root.ui.searchQuery)
+      const cacheKey = `vehicles:list:${page}:${this.root.ui.searchQuery}`
+      this.root.cache.set(cacheKey, data, CacheStore.TTL.vehicles)
+      runInAction(() => {
+        this.list = data.results
+        this.total = data.count
+      })
+    } catch {
+      console.log('An error occurred with the background refresh.')
+    } finally {
+      runInAction(() => {
+        this.isRefreshing = false
+      })
+    }
+  }
+
+  // Prefetch next page in background
+  prefetchNextPage = (): void => {
+    const nextPage = this.page + 1
+    if (nextPage > this.totalPages) return
+
+    const cacheKey = `vehicles:list:${nextPage}:${this.root.ui.searchQuery}`
+    const status = this.root.cache.getStatus(cacheKey)
+
+    if (status === 'missing') {
+      this.service
+        .getAll(nextPage, this.root.ui.searchQuery)
+        .then((data) => {
+          this.root.cache.set(cacheKey, data, CacheStore.TTL.vehicles)
+        })
+        .catch(() => {})
     }
   }
 

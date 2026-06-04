@@ -1,5 +1,7 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { AppShell, Group, Title, Tabs } from '@mantine/core'
+import { CacheIndicator } from '@starwars/ui'
+import { useStore } from '@starwars/store'
 import styles from './AppLayout.module.css'
 
 const navItems = [
@@ -14,6 +16,14 @@ const navItems = [
 const AppLayout = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { people, planets, starships, vehicles, species } = useStore()
+
+  const isRefreshing =
+    people.isRefreshing ||
+    planets.isRefreshing ||
+    starships.isRefreshing ||
+    vehicles.isRefreshing ||
+    species.isRefreshing
 
   return (
     <AppShell header={{ height: 130 }} padding="md">
@@ -23,6 +33,9 @@ const AppLayout = () => {
             <span className={styles.titleStarWars}>Star Wars</span>
             <span className={styles.titleExplorer}>Explorer</span>
           </Title>
+          <div className={styles.cacheIndicator}>
+            <CacheIndicator isRefreshing={isRefreshing} />
+          </div>
         </Group>
         <Tabs
           value={location.pathname}
