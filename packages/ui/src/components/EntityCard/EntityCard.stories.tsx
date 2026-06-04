@@ -27,7 +27,7 @@ export const Person: Story = {
   args: {
     title: 'Luke Skywalker',
     subtitle: 'Tatooine',
-    meta: 'Birth year: 19 BBY',
+    meta: 'Birth year: 19BBY',
     badgeLabel: 'Male',
     badgeColor: 'nebulaBlue',
   },

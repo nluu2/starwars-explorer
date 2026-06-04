@@ -26,7 +26,7 @@ const personFields: DetailField[] = [
   { label: 'Mass', value: '77kg' },
   { label: 'Hair color', value: 'Blond' },
   { label: 'Eye color', value: 'Blue' },
-  { label: 'Birth year', value: '19 BBY' },
+  { label: 'Birth year', value: '19BBY' },
   { label: 'Gender', value: 'Male' },
 ]
 
