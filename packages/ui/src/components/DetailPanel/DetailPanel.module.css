@@ -1,0 +1,37 @@
+.title {
+  font-size: var(--mantine-font-size-lg);
+}
+
+.field {
+  min-height: 44px;
+}
+
+.fieldLabel {
+  flex-shrink: 0;
+}
+
+.fieldValue {
+  text-align: right;
+  word-break: break-word;
+}
+
+.fieldSkeleton {
+  height: 44px;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-gray-2);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.fieldSkeleton:nth-child(even) {
+  animation-delay: 0.2s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opactify: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

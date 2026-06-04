@@ -7,8 +7,11 @@
     "@starwars/api": "workspace:*",
     "@starwars/domain": "workspace:*",
     "mobx": "^6.15.4",
-    "mobx-react-lite": "^4.1.1",
-    "react": "^19.2.6"
+    "mobx-react-lite": "^4.1.1"
+  },
+  "peerDependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@types/react": "^19.2.15",

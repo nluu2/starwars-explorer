@@ -15,14 +15,15 @@
     "strict": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
-  }
-  ,"exclude": ["node_modules"]
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "exclude": ["node_modules"]
 }

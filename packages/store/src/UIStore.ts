@@ -1,52 +1,52 @@
-import { makeAutoObservable } from "mobx";
-import type { RootStore } from "./RootStore";
+import { makeAutoObservable } from 'mobx'
+import type { RootStore } from './RootStore'
 
-export type ColorScheme = "light" | "dark";
+export type ColorScheme = 'light' | 'dark'
 
 export interface Notification {
-    id: string;
-    message: string;
-    type: "success" | "error" | "info";
+  id: string
+  message: string
+  type: 'success' | 'error' | 'info'
 }
 
 export class UIStore {
-    searchQuery: string = "";
-    activeDrawerId: string | null = null;
-    colorScheme: ColorScheme = "dark";
-    sideBarOpen: boolean = true;
-    notifications: Notification[] = [];
+  searchQuery: string = ''
+  activeDrawerId: string | null = null
+  colorScheme: ColorScheme = 'dark'
+  sideBarOpen: boolean = true
+  notifications: Notification[] = []
 
-    constructor(private root: RootStore) {
-        makeAutoObservable(this);
-    }
+  constructor(private root: RootStore) {
+    makeAutoObservable(this)
+  }
 
-    setSearch = (query: string): void => {
-        this.searchQuery = query;
-    };
+  setSearch = (query: string): void => {
+    this.searchQuery = query
+  }
 
-    openDrawer = (id: string): void => {
-        this.activeDrawerId = id;
-    };
-    
-    closeDrawer = (): void => {
-        this.activeDrawerId = null;
-    };
+  openDrawer = (id: string): void => {
+    this.activeDrawerId = id
+  }
 
-    toggleSidebar = (): void => {
-        this.sideBarOpen = !this.sideBarOpen;
-    };
+  closeDrawer = (): void => {
+    this.activeDrawerId = null
+  }
 
-    setColorScheme = (scheme: ColorScheme): void => {
-        this.colorScheme = scheme;
-    };
-    
-    addNotification = (notif: Omit<Notification, "id">): void => {
-        const id = crypto.randomUUID();
-        this.notifications.push({ ...notif, id });
-        setTimeout(() => this.removeNotification(id), 5000);
-    };
+  toggleSidebar = (): void => {
+    this.sideBarOpen = !this.sideBarOpen
+  }
 
-    removeNotification = (id: string): void => {
-        this.notifications = this.notifications.filter(n => n.id !== id);
-    };
+  setColorScheme = (scheme: ColorScheme): void => {
+    this.colorScheme = scheme
+  }
+
+  addNotification = (notif: Omit<Notification, 'id'>): void => {
+    const id = crypto.randomUUID()
+    this.notifications.push({ ...notif, id })
+    setTimeout(() => this.removeNotification(id), 5000)
+  }
+
+  removeNotification = (id: string): void => {
+    this.notifications = this.notifications.filter((n) => n.id !== id)
+  }
 }
