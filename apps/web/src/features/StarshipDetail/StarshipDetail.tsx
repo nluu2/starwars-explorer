@@ -30,6 +30,8 @@ const StarshipDetail = observer(() => {
         starships.clearSelected()
       }}
       title={starship?.name ?? ''}
+      badgeLabel="Starship"
+      badgeColor="blue"
       fields={fields}
       isLoading={starships.isLoadingDetail}
     />

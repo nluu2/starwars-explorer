@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "../domain" },
+    { "path": "../utils" },
+    { "path": "../api" },
+    { "path": "../store" },
+    { "path": "../ui" }
+  ]
+}

@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite'
-import { Text, Stack } from '@mantine/core'
+import { Text, Stack, Badge, Group, Loader } from '@mantine/core'
 import { DetailPanel } from '@starwars/ui'
 import { useStore } from '@starwars/store'
+import { extractId } from '@starwars/utils'
 import styles from './CharacterDetail.module.css'
 
 const CharacterDetail = observer(() => {
@@ -33,16 +34,97 @@ const CharacterDetail = observer(() => {
       fields={fields}
       isLoading={people.isLoadingDetail}
     >
-      {person && (
-        <Stack gap="xs" className={styles.relationships}>
-          <Text size="sm" fw={500}>
-            Films appeared in
-          </Text>
-          <Text size="sm" c="dimmed">
-            {person.films.length > 0
-              ? `${person.films.length} film${person.films.length ? 's' : ''}`
-              : 'None'}
-          </Text>
+      {people.isLoadingRelations ? (
+        <Group justify="center" py="md">
+          <Loader size="sm" />
+        </Group>
+      ) : (
+        <Stack gap="lg" className={styles.relationships}>
+          {/* Homeworld */}
+          {people.selectedHomeworld && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Homeworld
+              </Text>
+              <Badge
+                variant="light"
+                color="green"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  const id = extractId(people.selectedHomeworld!.url)
+                  ui.closeDrawer()
+                  people.clearSelected()
+                  setTimeout(() => ui.openDrawer(id), 100)
+                }}
+              >
+                {people.selectedHomeworld.name}
+              </Badge>
+            </Stack>
+          )}
+
+          {/* Species */}
+          {people.selectedSpecies.length > 0 && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Species
+              </Text>
+              <Group gap="xs">
+                {people.selectedSpecies.map((s, i) => (
+                  <Badge key={i} variant="light" color="grape">
+                    {s.name}
+                  </Badge>
+                ))}
+              </Group>
+            </Stack>
+          )}
+
+          {/* Films */}
+          {people.selectedFilms.length > 0 && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Films ({people.selectedFilms.length})
+              </Text>
+              <Stack gap={4}>
+                {people.selectedFilms.map((f, i) => (
+                  <Text key={i} size="sm" c="dimmed">
+                    Episode {f.episode_id} - {f.title}
+                  </Text>
+                ))}
+              </Stack>
+            </Stack>
+          )}
+
+          {/* Starships */}
+          {people.selectedStarships.length > 0 && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Starships ({people.selectedStarships.length})
+              </Text>
+              <Group gap="xs">
+                {people.selectedStarships.map((s, i) => (
+                  <Badge key={i} variant="light" color="blue">
+                    {s.name}
+                  </Badge>
+                ))}
+              </Group>
+            </Stack>
+          )}
+
+          {/* Vehicles */}
+          {people.selectedVehicles.length > 0 && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Vehicles ({people.selectedVehicles.length})
+              </Text>
+              <Group gap="xs">
+                {people.selectedVehicles.map((v, i) => (
+                  <Badge key={i} variant="light" color="orange">
+                    {v.name}
+                  </Badge>
+                ))}
+              </Group>
+            </Stack>
+          )}
         </Stack>
       )}
     </DetailPanel>

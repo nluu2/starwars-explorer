@@ -27,6 +27,8 @@ const SpeciesDetail = observer(() => {
         speciesStore.clearSelected()
       }}
       title={species?.name ?? ''}
+      badgeLabel="Species"
+      badgeColor="blue"
       fields={fields}
       isLoading={speciesStore.isLoadingDetail}
     />

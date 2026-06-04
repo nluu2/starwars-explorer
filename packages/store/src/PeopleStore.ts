@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { PeopleService } from '@starwars/api'
-import type { Person, SwapiList } from '@starwars/domain'
+import type { Person, Film, Planet, Species, Starship, Vehicle, SwapiList } from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -11,7 +11,14 @@ export class PeopleStore {
   total: number = 0
   isLoading: boolean = false
   isLoadingDetail: boolean = false
+  isLoadingRelations: boolean = false
   error: string | null = null
+
+  selectedFilms: Film[] = []
+  selectedHomeworld: Planet | null = null
+  selectedSpecies: Species[] = []
+  selectedStarships: Starship[] = []
+  selectedVehicles: Vehicle[] = []
 
   constructor(
     private root: RootStore,
@@ -75,6 +82,7 @@ export class PeopleStore {
         this.selected = cached
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(cached)
       return
     }
 
@@ -89,9 +97,10 @@ export class PeopleStore {
         this.selected = person
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(person)
     } catch (e) {
-      this.error = e instanceof Error ? e.message : 'Failed to load character details'
       runInAction(() => {
+        this.error = e instanceof Error ? e.message : 'Failed to load character details'
         this.root.ui.addNotification({ type: 'error', message: this.error! })
       })
     } finally {
@@ -101,8 +110,46 @@ export class PeopleStore {
     }
   }
 
+  private resolveRelations = async (person: Person): Promise<void> => {
+    runInAction(() => {
+      this.isLoadingRelations = true
+      this.selectedFilms = []
+      this.selectedHomeworld = null
+      this.selectedSpecies = []
+      this.selectedStarships = []
+      this.selectedVehicles = []
+    })
+
+    try {
+      const [films, homeworld, species, starships, vehicles] = await Promise.all([
+        this.root.resolveUrls<Film>(person.films, 'films'),
+        this.root.resolveUrl<Planet>(person.homeworld, 'planets'),
+        this.root.resolveUrls<Species>(person.species, 'species'),
+        this.root.resolveUrls<Starship>(person.starships, 'starships'),
+        this.root.resolveUrls<Vehicle>(person.vehicles, 'vehicles'),
+      ])
+
+      runInAction(() => {
+        this.selectedFilms = films
+        this.selectedHomeworld = homeworld
+        this.selectedSpecies = species
+        this.selectedStarships = starships
+        this.selectedVehicles = vehicles
+      })
+    } finally {
+      runInAction(() => {
+        this.isLoadingRelations = false
+      })
+    }
+  }
+
   clearSelected = (): void => {
     this.selected = null
+    this.selectedFilms = []
+    this.selectedHomeworld = null
+    this.selectedSpecies = []
+    this.selectedStarships = []
+    this.selectedVehicles = []
   }
 
   refresh = (): Promise<void> => {

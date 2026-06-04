@@ -28,6 +28,8 @@ const VehicleDetail = observer(() => {
         vehicles.clearSelected()
       }}
       title={vehicle?.name ?? ''}
+      badgeLabel="Vehicle"
+      badgeColor="blue"
       fields={fields}
       isLoading={vehicles.isLoadingDetail}
     />

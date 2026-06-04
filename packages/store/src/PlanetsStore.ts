@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { PlanetsService } from '@starwars/api'
-import type { Planet, SwapiList } from '@starwars/domain'
+import type { Planet, Person, SwapiList } from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -11,7 +11,10 @@ export class PlanetsStore {
   total: number = 0
   isLoading: boolean = false
   isLoadingDetail: boolean = false
+  isLoadingRelations: boolean = false
   error: string | null = null
+
+  selectedResidents: Person[] = []
 
   constructor(
     private root: RootStore,
@@ -75,6 +78,7 @@ export class PlanetsStore {
         this.selected = cached
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(cached)
       return
     }
 
@@ -89,9 +93,10 @@ export class PlanetsStore {
         this.selected = planet
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(planet)
     } catch (e) {
-      this.error = e instanceof Error ? e.message : 'Failed to load planet details'
       runInAction(() => {
+        this.error = e instanceof Error ? e.message : 'Failed to load planet details'
         this.root.ui.addNotification({ type: 'error', message: this.error! })
       })
     } finally {
@@ -101,8 +106,27 @@ export class PlanetsStore {
     }
   }
 
+  private resolveRelations = async (planet: Planet): Promise<void> => {
+    runInAction(() => {
+      this.isLoadingRelations = true
+      this.selectedResidents = []
+    })
+
+    try {
+      const residents = await this.root.resolveUrls<Person>(planet.residents, 'people')
+      runInAction(() => {
+        this.selectedResidents = residents
+      })
+    } finally {
+      runInAction(() => {
+        this.isLoadingRelations = false
+      })
+    }
+  }
+
   clearSelected = (): void => {
     this.selected = null
+    this.selectedResidents = []
   }
 
   refresh = (): Promise<void> => {

@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
-import { Text, Stack } from '@mantine/core'
+import { Text, Stack, Badge, Group, Loader } from '@mantine/core'
 import { DetailPanel } from '@starwars/ui'
 import { useStore } from '@starwars/store'
-import styles from './FilmDetail.module.css'
 
 const FilmDetail = observer(() => {
   const { films, ui } = useStore()
@@ -31,13 +30,55 @@ const FilmDetail = observer(() => {
       isLoading={films.isLoadingDetail}
     >
       {film && (
-        <Stack gap="xs" className={styles.relationships}>
-          <Text size="sm" fw={500}>
-            Opening crawl
-          </Text>
-          <Text size="sm" c="dimmed" style={{ whiteSpace: 'pre-line' }}>
-            {film.opening_crawl}
-          </Text>
+        <Stack gap="lg">
+          <Stack gap="xs">
+            <Text size="sm" fw={500}>
+              Opening crawl
+            </Text>
+            <Text size="sm" c="dimmed" style={{ whiteSpace: 'pre-line' }}>
+              {film.opening_crawl}
+            </Text>
+          </Stack>
+
+          {films.isLoadingRelations ? (
+            <Group justify="center" py="md">
+              <Loader size="sm" />
+            </Group>
+          ) : (
+            <>
+              {/* Characters */}
+              {films.selectedCharacters.length > 0 && (
+                <Stack gap="xs">
+                  <Text size="sm" fw={500}>
+                    Characters ({films.selectedCharacters.length})
+                  </Text>
+                  <Group gap="xs">
+                    {films.selectedCharacters.map((c, i) => (
+                      <Badge key={i} variant="light" color="blue">
+                        {c.name}
+                      </Badge>
+                    ))}
+                  </Group>
+                </Stack>
+              )}
+
+              {/* Planets */}
+              {films.selectedPlanets.length > 0 && (
+                <Stack gap="xs">
+                  <Text size="sm" fw={500}>
+                    Planets ({films.selectedPlanets.length})
+                  </Text>
+                  <Group gap="xs">
+                    {films.selectedPlanets.map((p, i) => (
+                      <Badge key={i} variant="light" color="green">
+                        {p.name}
+                      </Badge>
+                    ))}
+                  </Group>
+                </Stack>
+              )}
+            </>
+          )}
         </Stack>
       )}
     </DetailPanel>

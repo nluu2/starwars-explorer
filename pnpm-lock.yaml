@@ -345,6 +345,9 @@ importers:
       '@starwars/domain':
         specifier: workspace:*
         version: link:../domain
+      '@starwars/utils':
+        specifier: workspace:*
+        version: link:../utils
       mobx:
         specifier: ^6.15.4
         version: 6.15.4

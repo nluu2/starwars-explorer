@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { Text, Stack, Badge, Group, Loader } from '@mantine/core'
 import { DetailPanel } from '@starwars/ui'
 import { useStore } from '@starwars/store'
 
@@ -27,9 +28,35 @@ const PlanetDetail = observer(() => {
         planets.clearSelected()
       }}
       title={planet?.name ?? ''}
+      badgeLabel="Planet"
+      badgeColor="blue"
       fields={fields}
       isLoading={planets.isLoadingDetail}
-    />
+    >
+      {planets.isLoadingRelations ? (
+        <Group justify="center" py="md">
+          <Loader size="sm" />
+        </Group>
+      ) : (
+        <>
+          {/* Residents */}
+          {planets.selectedResidents.length > 0 && (
+            <Stack gap="xs">
+              <Text size="sm" fw={500}>
+                Residents ({planets.selectedResidents.length})
+              </Text>
+              <Group gap="xs">
+                {planets.selectedResidents.map((r, i) => (
+                  <Badge key={i} variant="light" color="blue">
+                    {r.name}
+                  </Badge>
+                ))}
+              </Group>
+            </Stack>
+          )}
+        </>
+      )}
+    </DetailPanel>
   )
 })
 

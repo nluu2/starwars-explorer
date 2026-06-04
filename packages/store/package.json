@@ -6,6 +6,7 @@
   "dependencies": {
     "@starwars/api": "workspace:*",
     "@starwars/domain": "workspace:*",
+    "@starwars/utils": "workspace:*",
     "mobx": "^6.15.4",
     "mobx-react-lite": "^4.1.1"
   },

@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { FilmsService } from '@starwars/api'
-import type { Film, SwapiList } from '@starwars/domain'
+import type { Film, Person, Planet, SwapiList } from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -9,7 +9,11 @@ export class FilmsStore {
   selected: Film | null = null
   isLoading: boolean = false
   isLoadingDetail: boolean = false
+  isLoadingRelations: boolean = false
   error: string | null = null
+
+  selectedCharacters: Person[] = []
+  selectedPlanets: Planet[] = []
 
   constructor(
     private root: RootStore,
@@ -69,6 +73,7 @@ export class FilmsStore {
         this.selected = cached
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(cached)
       return
     }
 
@@ -83,9 +88,10 @@ export class FilmsStore {
         this.selected = film
       })
       this.root.ui.openDrawer(id)
+      await this.resolveRelations(film)
     } catch (e) {
-      this.error = e instanceof Error ? e.message : 'Failed to load film'
       runInAction(() => {
+        this.error = e instanceof Error ? e.message : 'Failed to load film'
         this.root.ui.addNotification({ type: 'error', message: this.error! })
       })
     } finally {
@@ -95,8 +101,34 @@ export class FilmsStore {
     }
   }
 
+  private resolveRelations = async (film: Film): Promise<void> => {
+    runInAction(() => {
+      this.isLoadingRelations = true
+      this.selectedCharacters = []
+      this.selectedPlanets = []
+    })
+
+    try {
+      const [characters, planets] = await Promise.all([
+        this.root.resolveUrls<Person>(film.characters, 'people'),
+        this.root.resolveUrls<Planet>(film.planets, 'planets'),
+      ])
+
+      runInAction(() => {
+        this.selectedCharacters = characters
+        this.selectedPlanets = planets
+      })
+    } finally {
+      runInAction(() => {
+        this.isLoadingRelations = false
+      })
+    }
+  }
+
   clearSelected = (): void => {
     this.selected = null
+    this.selectedCharacters = []
+    this.selectedPlanets = []
   }
 
   refresh = (): Promise<void> => {
