@@ -1,4 +1,17 @@
 .input {
   width: 100%;
-  max-width: 480px;
+  max-width: 600px;
+}
+
+.input :global(.mantine-TextInput-input) {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.input :global(.mantine-TextInput-input::placeholder) {
+  color: #000000;
+}
+
+.input :global(.mantine-TextInput-section) {
+  color: #000000;
 }

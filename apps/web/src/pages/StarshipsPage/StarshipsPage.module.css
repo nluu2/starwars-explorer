@@ -1,0 +1,14 @@
+.container {
+  padding-top: var(--mantine-spacing-xl);
+  padding-bottom: var(--mantine-spacing-xl);
+}
+
+.empty {
+  padding: var(--mantine-spacing-xl) 0;
+}
+
+.container :global(.mantine-Pagination-control[data-active]) {
+  background-color: #ffe300;
+  border-color: #ffe300;
+  color: #000000;
+}

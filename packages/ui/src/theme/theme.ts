@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple } from '@mantine/core'
+import { AppShell, createTheme, MantineColorsTuple } from '@mantine/core'
 
 const imperialGold: MantineColorsTuple = [
   '#FFF9E6',
@@ -35,7 +35,17 @@ export const starwarsTheme = createTheme({
   fontFamily: 'Inter, sans-serif',
   defaultRadius: 'md',
   black: '#1A1B1E',
+  other: {
+    appBackground: '#000000',
+  },
   components: {
+    AppShell: {
+      styles: {
+        root: { backgroundColor: '#000000' },
+        main: { backgroundColor: '#000000' },
+        header: { backgroundColor: '#000000' },
+      },
+    },
     Card: {
       defaultProps: { shadow: 'sm', withBorder: true, radius: 'md' },
     },

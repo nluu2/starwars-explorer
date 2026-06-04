@@ -1,0 +1,29 @@
+.titleStarWars {
+  display: block;
+  font-family: 'Star Wars', sans-serif !important;
+  font-size: 2.5rem;
+  color: #ffe300;
+}
+
+.titleExplorer {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 8px;
+  font-weight: 400;
+}
+
+.tabs {
+  margin-top: var(--mantine-spacing-xs);
+}
+
+.tabs :global(.mantine-Tabs-tab[data-active]) {
+  border-bottom-color: #ffffff;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.tabs :global(.mantine-Tabs-tab[data-active]:hover) {
+  border-bottom-color: #ffffff;
+  color: #ffffff;
+}
