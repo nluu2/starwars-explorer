@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { FilmsService } from '@starwars/api'
-import type { Film, Person, Planet, SwapiList } from '@starwars/domain'
+import type { Film, Person, Planet, PaginatedResult } from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -32,11 +32,11 @@ export class FilmsStore {
 
   fetchAll = async (): Promise<void> => {
     const cacheKey = 'films:list'
-    const cached = this.root.cache.get<SwapiList<Film>>(cacheKey)
+    const cached = this.root.cache.get<PaginatedResult<Film>>(cacheKey)
 
     if (cached) {
       runInAction(() => {
-        this.list = cached.results
+        this.list = cached.items
       })
       return
     }
@@ -50,7 +50,7 @@ export class FilmsStore {
       const data = await this.service.getAll()
       this.root.cache.set(cacheKey, data, CacheStore.TTL.films)
       runInAction(() => {
-        this.list = data.results
+        this.list = data.items
       })
     } catch (e) {
       runInAction(() => {

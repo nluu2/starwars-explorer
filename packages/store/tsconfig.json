@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "jsx": "react-jsx",
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "types": ["jest", "node"]
   },
   "include": ["src"],
   "references": [{ "path": "../domain" }, { "path": "../api" }, { "path": "../utils" }]

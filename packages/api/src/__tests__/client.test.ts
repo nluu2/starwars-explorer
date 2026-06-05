@@ -9,7 +9,7 @@ afterEach(() => {
 
 describe('api client', () => {
   it('has the correct baseURL', () => {
-    expect(client.defaults.baseURL).toBe('https://swapi.dev/api')
+    expect(client.defaults.baseURL).toBe('https://swapi.info/api')
   })
 
   it('returns response data on success', async () => {

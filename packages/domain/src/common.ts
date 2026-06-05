@@ -1,6 +1,8 @@
-export interface SwapiList<T> {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
+export interface PaginatedResult<T> {
+  items: T[]
+  total: number
+  page: number
+  totalPages: number
+  hasNext: boolean
+  hasPrevious: boolean
 }

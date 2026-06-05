@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { PlanetsService } from '@starwars/api'
-import type { Planet, Person, SwapiList } from '@starwars/domain'
+import type { Planet, Person, PaginatedResult } from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -9,6 +9,7 @@ export class PlanetsStore {
   selected: Planet | null = null
   page: number = 1
   total: number = 0
+  totalPages: number = 0
   isLoading: boolean = false
   isLoadingDetail: boolean = false
   isLoadingRelations: boolean = false
@@ -24,10 +25,6 @@ export class PlanetsStore {
     makeAutoObservable(this)
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.total / 10)
-  }
-
   get isEmpty(): boolean {
     return !this.isLoading && this.list.length === 0
   }
@@ -35,12 +32,13 @@ export class PlanetsStore {
   fetchAll = async (page = 1): Promise<void> => {
     const cacheKey = `planets:list:${page}:${this.root.ui.searchQuery}`
     const status = this.root.cache.getStatus(cacheKey)
-    const cached = this.root.cache.get<SwapiList<Planet>>(cacheKey)
+    const cached = this.root.cache.get<PaginatedResult<Planet>>(cacheKey)
 
     if (cached) {
       runInAction(() => {
-        this.list = cached.results
-        this.total = cached.count
+        this.list = cached.items
+        this.total = cached.total
+        this.totalPages = cached.totalPages
         this.page = page
       })
       if (status === 'stale') this.backgroundRefresh(page)
@@ -56,8 +54,9 @@ export class PlanetsStore {
       const data = await this.service.getAll(page, this.root.ui.searchQuery)
       this.root.cache.set(cacheKey, data, CacheStore.TTL.planets)
       runInAction(() => {
-        this.list = data.results
-        this.total = data.count
+        this.list = data.items
+        this.total = data.total
+        this.totalPages = data.totalPages
         this.page = page
       })
     } catch (e) {
@@ -140,8 +139,9 @@ export class PlanetsStore {
       const cacheKey = `planets:list:${page}:${this.root.ui.searchQuery}`
       this.root.cache.set(cacheKey, data, CacheStore.TTL.planets)
       runInAction(() => {
-        this.list = data.results
-        this.total = data.count
+        this.list = data.items
+        this.total = data.total
+        this.totalPages = data.totalPages
       })
     } catch {
       console.log('An error occurred with the background refresh.')

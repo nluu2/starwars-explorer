@@ -39,6 +39,6 @@ export const WithoutRetry: Story = {
 export const NetworkError: Story = {
   name: 'Network error',
   args: {
-    message: 'Network Error - swapi.dev may be down. Please try again in a moment.',
+    message: 'Network Error - swapi.info may be down. Please try again in a moment.',
   },
 }

@@ -1,5 +1,6 @@
 // URL helper
 export function extractId(url: string) {
   const parts = url.split('/')
-  return parts[parts.length - 2]
+  const last = parts[parts.length - 1]
+  return last !== '' ? last : parts[parts.length - 2]
 }

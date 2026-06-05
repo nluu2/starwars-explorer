@@ -1,11 +1,24 @@
-import type { SwapiList, Film } from '@starwars/domain'
+import type { PaginatedResult, Film } from '@starwars/domain'
 import { client } from './client'
 
+const PAGE_SIZE = 12
+
 export const filmsService = {
-  getAll: (): Promise<SwapiList<Film>> =>
-    client.get<SwapiList<Film>>('/films/').then((response) => response.data),
+  getAll: async (): Promise<PaginatedResult<Film>> => {
+    const response = await client.get<Film[]>('/films')
+    const items = response.data
+
+    return {
+      items,
+      total: items.length,
+      page: 1,
+      totalPages: 1,
+      hasNext: false,
+      hasPrevious: false,
+    }
+  },
   getById: (id: string): Promise<Film> =>
-    client.get<Film>(`/films/${id}/`).then((response) => response.data),
+    client.get<Film>(`/films/${id}`).then((response) => response.data),
 }
 
 export type FilmsService = typeof filmsService

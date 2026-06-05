@@ -1,6 +1,6 @@
 export const testDomain = 'domain'
 
-export type { SwapiList } from './common'
+export type { PaginatedResult } from './common'
 export type { Film } from './film'
 export type { Person } from './person'
 export type { Planet } from './planet'

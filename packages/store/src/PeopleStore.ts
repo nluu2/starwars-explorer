@@ -1,6 +1,14 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import type { PeopleService } from '@starwars/api'
-import type { Person, Film, Planet, Species, Starship, Vehicle, SwapiList } from '@starwars/domain'
+import type {
+  Person,
+  Film,
+  Planet,
+  Species,
+  Starship,
+  Vehicle,
+  PaginatedResult,
+} from '@starwars/domain'
 import { CacheStore } from './CacheStore'
 import type { RootStore } from './RootStore'
 
@@ -9,6 +17,7 @@ export class PeopleStore {
   selected: Person | null = null
   page: number = 1
   total: number = 0
+  totalPages: number = 0
   isLoading: boolean = false
   isLoadingDetail: boolean = false
   isLoadingRelations: boolean = false
@@ -28,10 +37,6 @@ export class PeopleStore {
     makeAutoObservable(this)
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.total / 10)
-  }
-
   get isEmpty(): boolean {
     return !this.isLoading && this.list.length === 0
   }
@@ -39,12 +44,13 @@ export class PeopleStore {
   fetchAll = async (page = 1): Promise<void> => {
     const cacheKey = `people:list:${page}:${this.root.ui.searchQuery}`
     const status = this.root.cache.getStatus(cacheKey)
-    const cached = this.root.cache.get<SwapiList<Person>>(cacheKey)
+    const cached = this.root.cache.get<PaginatedResult<Person>>(cacheKey)
 
     if (cached) {
       runInAction(() => {
-        this.list = cached.results
-        this.total = cached.count
+        this.list = cached.items
+        this.total = cached.total
+        this.totalPages = cached.totalPages
         this.page = page
       })
       if (status === 'stale') this.backgroundRefresh(page)
@@ -60,8 +66,9 @@ export class PeopleStore {
       const data = await this.service.getAll(page, this.root.ui.searchQuery)
       this.root.cache.set(cacheKey, data, CacheStore.TTL.people)
       runInAction(() => {
-        this.list = data.results
-        this.total = data.count
+        this.list = data.items
+        this.total = data.total
+        this.totalPages = data.totalPages
         this.page = page
       })
     } catch (e) {
@@ -159,8 +166,9 @@ export class PeopleStore {
       const cacheKey = `people:list:${page}:${this.root.ui.searchQuery}`
       this.root.cache.set(cacheKey, data, CacheStore.TTL.people)
       runInAction(() => {
-        this.list = data.results
-        this.total = data.count
+        this.list = data.items
+        this.total = data.total
+        this.totalPages = data.totalPages
       })
     } catch {
       console.log('An error occurred with the background refresh.')

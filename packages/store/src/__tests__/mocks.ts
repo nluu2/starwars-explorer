@@ -7,6 +7,14 @@ import type {
   Species,
   PaginatedResult,
 } from '@starwars/domain'
+import type {
+  PeopleService,
+  PlanetsService,
+  FilmsService,
+  StarshipsService,
+  VehiclesService,
+  SpeciesService,
+} from '@starwars/api'
 
 export const mockPerson: Person = {
   birth_year: '19BBY',
@@ -128,3 +136,45 @@ export const mockPaginatedResult = <T>(items: T[]): PaginatedResult<T> => ({
   hasNext: false,
   hasPrevious: false,
 })
+
+export const createMockPeopleService = (): jest.Mocked<PeopleService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockPerson])),
+  getById: jest.fn().mockResolvedValue(mockPerson),
+})
+
+export const createMockPlanetsService = (): jest.Mocked<PlanetsService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockPlanet])),
+  getById: jest.fn().mockResolvedValue(mockPlanet),
+})
+
+export const createMockFilmsService = (): jest.Mocked<FilmsService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockFilm])),
+  getById: jest.fn().mockResolvedValue(mockFilm),
+})
+
+export const createMockStarshipsService = (): jest.Mocked<StarshipsService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockStarship])),
+  getById: jest.fn().mockResolvedValue(mockStarship),
+})
+
+export const createMockVehiclesService = (): jest.Mocked<VehiclesService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockVehicle])),
+  getById: jest.fn().mockResolvedValue(mockVehicle),
+})
+
+export const createMockSpeciesService = (): jest.Mocked<SpeciesService> => ({
+  getAll: jest.fn().mockResolvedValue(mockPaginatedResult([mockSpecies])),
+  getById: jest.fn().mockResolvedValue(mockSpecies),
+})
+
+export const createMockRootStore = () => {
+  const services = {
+    people: createMockPeopleService(),
+    planets: createMockPlanetsService(),
+    films: createMockFilmsService(),
+    starships: createMockStarshipsService(),
+    vehicles: createMockVehiclesService(),
+    species: createMockSpeciesService(),
+  }
+  return { services }
+}

@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "main": "./src/index.ts",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
   "dependencies": {
     "@starwars/api": "workspace:*",
     "@starwars/domain": "workspace:*",
@@ -15,7 +21,10 @@
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/react": "^19.2.15",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11"
   }
 }
