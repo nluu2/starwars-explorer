@@ -6,7 +6,10 @@
   "scripts": {
     "lint": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@mantine/core": "^9.3.0",
@@ -27,12 +30,18 @@
     "@storybook/react": "^10.4.2",
     "@storybook/react-vite": "^10.4.2",
     "@storybook/test": "^8.6.15",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/browser-playwright": "^4.1.8",
     "@vitest/coverage-v8": "^4.1.8",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
     "playwright": "^1.60.0",
     "storybook": "^10.4.2",
+    "ts-jest": "^29.4.11",
     "vitest": "^4.1.8"
   }
 }
