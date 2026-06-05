@@ -16,7 +16,7 @@ const navItems = [
 const AppLayout = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { people, planets, starships, vehicles, species } = useStore()
+  const { people, planets, starships, vehicles, species, ui } = useStore()
 
   const isRefreshing =
     people.isRefreshing ||
@@ -39,7 +39,7 @@ const AppLayout = () => {
         </Group>
         <Tabs
           value={location.pathname}
-          onChange={(value) => navigate(value ?? '/')}
+          onChange={(value) => { ui.setSearch(''); navigate(value ?? '/') }}
           className={styles.tabs}
         >
           <Tabs.List px="xl" justify="center">

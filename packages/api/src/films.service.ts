@@ -1,8 +1,6 @@
 import type { PaginatedResult, Film } from '@starwars/domain'
 import { client } from './client'
 
-const PAGE_SIZE = 12
-
 export const filmsService = {
   getAll: async (): Promise<PaginatedResult<Film>> => {
     const response = await client.get<Film[]>('/films')

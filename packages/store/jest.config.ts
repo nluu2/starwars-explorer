@@ -12,6 +12,7 @@ const config: Config = {
       {
         tsconfig: {
           experimentalDecorators: true,
+          ignoreDeprecations: '6.0',
         },
       },
     ],

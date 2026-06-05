@@ -1,4 +1,5 @@
-import { AppShell, createTheme, MantineColorsTuple } from '@mantine/core'
+import { createTheme } from '@mantine/core'
+import type { MantineColorsTuple } from '@mantine/core'
 
 const imperialGold: MantineColorsTuple = [
   '#FFF9E6',

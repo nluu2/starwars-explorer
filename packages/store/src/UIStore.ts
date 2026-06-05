@@ -16,7 +16,7 @@ export class UIStore {
   sideBarOpen: boolean = true
   notifications: Notification[] = []
 
-  constructor(private root: RootStore) {
+  constructor(_root: RootStore) {
     makeAutoObservable(this)
   }
 

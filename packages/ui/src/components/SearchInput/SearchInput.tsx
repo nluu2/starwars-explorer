@@ -1,4 +1,4 @@
-import { TextInput, ActionIcon, CloseButton } from '@mantine/core'
+import { TextInput, CloseButton } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import styles from './SearchInput.module.css'
 
