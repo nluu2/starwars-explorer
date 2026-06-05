@@ -49,6 +49,9 @@ export const starwarsTheme = createTheme({
     },
     Card: {
       defaultProps: { shadow: 'sm', withBorder: true, radius: 'md' },
+      styles: {
+        root: { backgroundColor: '#ffffff' },
+      },
     },
     Badge: {
       defaultProps: { variant: 'light' },

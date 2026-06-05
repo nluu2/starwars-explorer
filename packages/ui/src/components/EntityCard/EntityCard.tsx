@@ -43,7 +43,7 @@ export const EntityCard = ({
         )}
       </Group>
       {subtitle && (
-        <Text className={styles.subtitle} size="sm" c="dimmed">
+        <Text className={styles.subtitle} size="sm">
           {subtitle}
         </Text>
       )}

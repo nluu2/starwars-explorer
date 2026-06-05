@@ -1,19 +1,20 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { AppShell, Group, Title, Tabs } from '@mantine/core'
+import { observer } from 'mobx-react-lite'
+import { AppShell, Group, Title, NavLink } from '@mantine/core'
 import { CacheIndicator } from '@starwars/ui'
 import { useStore } from '@starwars/store'
 import styles from './AppLayout.module.css'
 
 const navItems = [
-  { label: 'CHARACTERS', path: '/' },
-  { label: 'FILMS', path: '/films' },
-  { label: 'STARSHIPS', path: '/starships' },
-  { label: 'VEHICLES', path: '/vehicles' },
-  { label: 'SPECIES', path: '/species' },
-  { label: 'PLANETS', path: '/planets' },
+  { label: 'Characters', path: '/' },
+  { label: 'Films', path: '/films' },
+  { label: 'Starships', path: '/starships' },
+  { label: 'Vehicles', path: '/vehicles' },
+  { label: 'Species', path: '/species' },
+  { label: 'Planets', path: '/planets' },
 ]
 
-const AppLayout = () => {
+const AppLayout = observer(() => {
   const navigate = useNavigate()
   const location = useLocation()
   const { people, planets, starships, vehicles, species, ui } = useStore()
@@ -26,37 +27,37 @@ const AppLayout = () => {
     species.isRefreshing
 
   return (
-    <AppShell header={{ height: 130 }} padding="md">
+    <AppShell header={{ height: 130 }} navbar={{ width: 200, breakpoint: 'sm' }} padding={0}>
       <AppShell.Header withBorder={false}>
-        <Group px="xl" pt="sm" pb={0} justify="center">
-          <Title order={1} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        <Group px="xl" py="xl" justify="space-between" align="center">
+          <Title order={1}>
             <span className={styles.titleStarWars}>Star Wars</span>
             <span className={styles.titleExplorer}>Explorer</span>
           </Title>
-          <div className={styles.cacheIndicator}>
-            <CacheIndicator isRefreshing={isRefreshing} />
-          </div>
+          <CacheIndicator isRefreshing={isRefreshing} />
         </Group>
-        <Tabs
-          value={location.pathname}
-          onChange={(value) => { ui.setSearch(''); navigate(value ?? '/') }}
-          className={styles.tabs}
-        >
-          <Tabs.List px="xl" justify="center">
-            {navItems.map((item, i) => (
-              <Tabs.Tab key={i} value={item.path}>
-                {item.label}
-              </Tabs.Tab>
-            ))}
-          </Tabs.List>
-        </Tabs>
       </AppShell.Header>
+
+      <AppShell.Navbar p="md" className={styles.navbar}>
+        {navItems.map((item, i) => (
+          <NavLink
+            key={i}
+            label={item.label}
+            active={location.pathname === item.path}
+            onClick={() => {
+              ui.setSearch('')
+              navigate(item.path)
+            }}
+            className={styles.navLink}
+          />
+        ))}
+      </AppShell.Navbar>
 
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
     </AppShell>
   )
-}
+})
 
 export default AppLayout

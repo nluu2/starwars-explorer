@@ -11,8 +11,8 @@ export interface PaginationBarProps {
 export const PaginationBar = ({ page, totalPages, total, onPageChange }: PaginationBarProps) => {
   if (totalPages <= 1) return null
 
-  const from = (page - 1) * 10 + 1
-  const to = Math.min(page * 10, total)
+  const from = (page - 1) * 12 + 1
+  const to = Math.min(page * 12, total)
 
   return (
     <Group className={styles.container} justify="space-between" align="center">

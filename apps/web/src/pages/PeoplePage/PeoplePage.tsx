@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Container, SimpleGrid, Stack, Group, Text } from '@mantine/core'
+import { Container, SimpleGrid, Stack, Group, Title, Text } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { SearchInput, PaginationBar, LoadingContainer, ErrorBanner } from '@starwars/ui'
 import { useStore } from '@starwars/store'
@@ -27,12 +27,7 @@ const PeoplePage = observer(() => {
     }
   }, [people.isLoading, people.page])
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      ui.setSearch(value)
-    },
-    [ui],
-  )
+  const handleSearchChange = useCallback((value: string) => { ui.setSearch(value) }, [ui])
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -45,14 +40,22 @@ const PeoplePage = observer(() => {
   return (
     <Container className={styles.container} size="xl">
       <Stack gap="xl">
-        {/* Search */}
-        <Group justify="center">
-          <SearchInput
-            value={ui.searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search characters..."
-            isLoading={people.isLoading}
-          />
+        {/* Page title */}
+        <Group justify="space-between" align="center">
+          <Group align="baseline" gap="sm">
+            <Title order={2} c="white">Characters</Title>
+            {!people.isLoading && people.total > 0 && (
+              <Text size="sm" c="dimmed">{people.total} total</Text>
+            )}
+          </Group>
+          <div style={{ width: 420 }}>
+            <SearchInput
+              value={ui.searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search characters..."
+              isLoading={people.isLoading}
+            />
+          </div>
         </Group>
 
         {/* Error state */}

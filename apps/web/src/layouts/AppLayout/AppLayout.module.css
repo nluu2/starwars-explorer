@@ -11,26 +11,34 @@
   font-size: 1rem;
   letter-spacing: 8px;
   font-weight: 400;
+  text-align: center;
 }
 
-.cacheIndicator {
-  position: absolute;
-  right: var(--mantine-spacing-xl);
-  top: 25%;
-  transform: translateY(-50%);
+.navbar {
+  background-color: #000000 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
 }
 
-.tabs {
-  margin-top: var(--mantine-spacing-xs);
+.navLink {
+  border-radius: var(--mantine-radius-md);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
 }
 
-.tabs :global(.mantine-Tabs-tab[data-active]) {
-  border-bottom-color: #ffffff;
+.navLink:hover {
+  background-color: rgba(255, 255, 255, 0.06);
   color: #ffffff;
-  font-weight: 700;
 }
 
-.tabs :global(.mantine-Tabs-tab[data-active]:hover) {
-  border-bottom-color: #ffffff;
-  color: #ffffff;
+.navLink[data-active] {
+  background-color: rgba(255, 227, 0, 0.1);
+  color: #ffe300;
+}
+
+.navLink[data-active]:hover {
+  background-color: rgba(255, 227, 0, 0.15);
+  color: #ffe300;
 }

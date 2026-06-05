@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Container, SimpleGrid, Stack, Text } from '@mantine/core'
+import { Container, SimpleGrid, Stack, Group, Title, Text } from '@mantine/core'
 import { LoadingContainer, ErrorBanner } from '@starwars/ui'
 import { useStore } from '@starwars/store'
 import FilmCard from '../../features/FilmCard/FilmCard'
@@ -17,6 +17,14 @@ const FilmsPage = observer(() => {
   return (
     <Container className={styles.container} size="xl">
       <Stack gap="xl">
+        {/* Page title */}
+        <Group align="baseline" gap="sm">
+          <Title order={2} c="white">Films</Title>
+          {!films.isLoading && films.list.length > 0 && (
+            <Text size="sm" c="dimmed">{films.list.length} total</Text>
+          )}
+        </Group>
+
         {/* Error state */}
         {films.error && <ErrorBanner message={films.error} onRetry={() => films.refresh()} />}
 

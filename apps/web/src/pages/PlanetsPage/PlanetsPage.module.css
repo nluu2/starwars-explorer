@@ -1,4 +1,5 @@
 .container {
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
   padding-top: var(--mantine-spacing-xl);
   padding-bottom: var(--mantine-spacing-xl);
 }

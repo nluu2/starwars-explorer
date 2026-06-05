@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { EntityCard } from '@starwars/ui'
 import type { Film } from '@starwars/domain'
-import { extractId } from '@starwars/utils'
+import { extractId, toRoman } from '@starwars/utils'
 import { useStore } from '@starwars/store'
 import styles from './FilmCard.module.css'
 
@@ -18,9 +18,7 @@ const FilmCard = observer(({ film }: FilmCardProps) => {
       <EntityCard
         title={film.title}
         subtitle={`Directed by ${film.director}`}
-        meta={`Released: ${film.release_date}`}
-        badgeLabel={`Episode ${film.episode_id}`}
-        badgeColor="blue"
+        meta={`Episode ${toRoman(film.episode_id)} · ${film.release_date.split('-')[0]}`}
         onClick={() => films.selectById(id)}
       />
     </div>
